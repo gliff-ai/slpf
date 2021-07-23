@@ -12,6 +12,12 @@ function lerp(yScan: number, edge: Edge) {
   // finds x-value from scanline intersecting edge
   // linear interpolation
   const { point1, point2 } = edge;
+  if (point1.y === yScan) {
+    return point1.x;
+  }
+  if (point2.y === yScan) {
+    return point2.x;
+  }
   return (
     ((yScan - point1.y) / (point2.y - point1.y)) * (point2.x - point1.x) +
     point1.x
@@ -80,7 +86,8 @@ function removeEdges(yScan: number, activeEdges: Edge[]) {
   // remove inactive edges from activeEdges
   for (let i = 0; i < activeEdges.length; i += 1) {
     if (yScan >= getYMax(activeEdges[i])) {
-      // either point in the edge is horizontal with or entirely below yScan
+      // either one edge edge is on this scane line
+      // or the entire edge is below yScan
       // remove offending edge and shrink array
       const last = activeEdges.pop();
       if (i < activeEdges.length && last) {
@@ -101,23 +108,13 @@ function getSpans(yScan: number, activeEdges: Edge[]) {
   return spans;
 }
 
-function collectSpan(edge: Edge, y: number): XYPoint[] {
-  // get a list of all pixels between the points of all spans
-  const { point1, point2 } = edge;
-  const fullspan: XYPoint[] = [];
-  for (let { x } = point1; x < point2.x; x += 1) {
-    fullspan.push({ x, y });
-  }
-  return fullspan;
-}
-
-function gatherSpans(spans: XYPoint[], yScan: number): XYPoint[] {
+function gatherSpans(spans: XYPoint[]): XYPoint[] {
   // for a list of spans, gather all the pixels within those spans together
   const gatheredSpans: XYPoint[][] = [];
   for (let i = 0; i < spans.length; i += 2) {
     const point1 = spans[i];
     const point2 = spans[i + 1];
-    gatheredSpans.push(collectSpan({ point1, point2 }, yScan));
+    gatheredSpans.push([point1, point2]);
   }
   return gatheredSpans.reduce(
     (accumulator, value) => accumulator.concat(value),
@@ -125,7 +122,7 @@ function gatherSpans(spans: XYPoint[], yScan: number): XYPoint[] {
   );
 }
 
-function slpfPoints(points: XYPoint[]): XYPoint[] {
+function slpfLines(points: XYPoint[]): XYPoint[][] {
   // Scanline Polygon Fill and return all points inside the polygon
   if (points.length < 3) return []; // need three points to do a fill
 
@@ -134,16 +131,20 @@ function slpfPoints(points: XYPoint[]): XYPoint[] {
     (e1, e2) => getYMin(e2) - getYMin(e1)
   );
   const activeEdges: Edge[] = [];
-  let yScan = getYMinAll(edges);
+  let yScan = Math.floor(getYMinAll(edges));
 
   // repeat until both edges and activeEdges are empty
-  const gatheredSpans: XYPoint[][] = [];
+  const horizontalLines: XYPoint[][] = [];
   let i = 0;
   while (edges.length > 0 || activeEdges.length > 0) {
     // manage activeEdges
     moveEdges(yScan, edges, activeEdges);
     removeEdges(yScan, activeEdges);
-    if (activeEdges.length >= 2) {
+    if (activeEdges.length === 0) {
+      // I think this should only occur due to Math.floor above
+      yScan += 1;
+    } else if (activeEdges.length % 2 === 0) {
+      // if we have an even number of edges, get the spans
       // sort edges by X separation
       activeEdges.sort((e1, e2) => {
         const cmp = getXofYMin(e1) - getXofYMin(e2);
@@ -151,16 +152,16 @@ function slpfPoints(points: XYPoint[]): XYPoint[] {
       });
       // fill spans on scanline
       const spans = getSpans(yScan, activeEdges);
-      gatheredSpans.push(gatherSpans(spans, yScan));
+      //   console.log(spans);
+      horizontalLines.push(gatherSpans(spans));
+      yScan += 1;
+    } else {
       yScan += 1;
     }
     i += 1;
-    if (i > 1000) break;
+    if (i > 4096) break; // TODO set a more clever time out
   }
-  return gatheredSpans.reduce(
-    (accumulator, value) => accumulator.concat(value),
-    []
-  );
+  return horizontalLines;
 }
 
-export { slpfPoints };
+export { slpfLines };
