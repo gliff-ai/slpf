@@ -1,6 +1,6 @@
 {
   "name": "@gliff-ai/slpf",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "Scan Line Polygon Filling for gliff.ai apps",
   "main": "dist/main.js",
   "module": "dist/src/index.ts",
