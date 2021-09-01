@@ -110,23 +110,6 @@ function getSpans(yScan: number, activeEdges: Edge[]) {
   return spans;
 }
 
-function gatherSpans(spans: XYPoint[]): XYPoint[] {
-  // for a list of spans, gather all the pixels within those spans together
-  const gatheredSpans: XYPoint[][] = [];
-  for (let i = 0; i < spans.length; i += 2) {
-    const point1 = spans[i];
-    const point2 = spans[i + 1];
-    gatheredSpans.push([point1, point2]);
-  }
-  // !!! it looks like this algorithm pairs up all the points in spans, then flattens it, so the output should be the same as the input. put a print in to test this
-  const output = gatheredSpans.reduce(
-    (accumulator, value) => accumulator.concat(value),
-    []
-  );
-  console.log(spans, output);
-  return output
-}
-
 function slpfLines(points: XYPoint[]): XYPoint[][] {
   // Scanline Polygon Fill and return all points inside the polygon
   if (points.length < 3) return []; // need three points to do a fill
@@ -157,8 +140,7 @@ function slpfLines(points: XYPoint[]): XYPoint[][] {
       });
       // fill spans on scanline
       const spans = getSpans(yScan, activeEdges);
-        console.log(spans, gatherSpans(spans));
-      horizontalLines.push(gatherSpans(spans));
+      horizontalLines.push(spans);
       yScan += 1;
     } else {
       yScan += 1;
