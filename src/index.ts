@@ -62,11 +62,11 @@ function getXofYMax(edge: Edge) {
 function pointsToEdges(points: XYPoint[]) {
   // converts list of points to list of non-horizontal edges
   const edges: Edge[] = [];
-  let point1 = points[points.length - 1];
+  let point1 = points[points.length - 1]; // !!! why points.length - 1?
   for (let i = 0; i < points.length; i += 1) {
     const point2 = points[i];
     // ignore horizontal edges
-    if (point1.x !== point2.x) {
+    if (point1.x !== point2.x) { // !!! surely this excludes vertical, not horizontal edges?
       edges.push({ point1, point2 });
     }
     point1 = point2;
@@ -77,7 +77,7 @@ function pointsToEdges(points: XYPoint[]) {
 function moveEdges(yScan: number, edges: Edge[], activeEdges: Edge[]) {
   // move active edges from edges to activeEdges
   // an active edge is one where either point is at y>=yScan
-  while (edges.length > 0 && yScan >= getYMin(edges[edges.length - 1])) {
+  while (edges.length > 0 && yScan >= getYMin(edges[edges.length - 1])) { // !!! this assumes all the "active" edges are at the end of edges, otherwise it will miss some
     activeEdges.push(edges.pop());
   }
 }
@@ -85,10 +85,11 @@ function moveEdges(yScan: number, edges: Edge[], activeEdges: Edge[]) {
 function removeEdges(yScan: number, activeEdges: Edge[]) {
   // remove inactive edges from activeEdges
   for (let i = 0; i < activeEdges.length; i += 1) {
-    if (yScan >= getYMax(activeEdges[i])) {
+    if (yScan >= getYMax(activeEdges[i])) { // !!! by the earlier definition of an active edge, this should be yScan > getYMax
       // either one edge edge is on this scane line
       // or the entire edge is below yScan
       // remove offending edge and shrink array
+      // !!! this deletion mechanism is weird, normal way would be to use splice. I think this will fail if the final element is inactive
       const last = activeEdges.pop();
       if (i < activeEdges.length && last) {
         // eslint-disable-next-line no-param-reassign
@@ -103,6 +104,7 @@ function getSpans(yScan: number, activeEdges: Edge[]) {
   // find spans of 'inside polygon' along scanline
   const spans: XYPoint[] = [];
   for (const edge of activeEdges) {
+    // !!! this looks like it's meant to get all the edge intersections along the scanline, but "active" edges don't necessarily intersect the scanline according to the definition above
     spans.push({ x: lerp(yScan, edge), y: yScan });
   }
   return spans;
@@ -116,10 +118,13 @@ function gatherSpans(spans: XYPoint[]): XYPoint[] {
     const point2 = spans[i + 1];
     gatheredSpans.push([point1, point2]);
   }
-  return gatheredSpans.reduce(
+  // !!! it looks like this algorithm pairs up all the points in spans, then flattens it, so the output should be the same as the input. put a print in to test this
+  const output = gatheredSpans.reduce(
     (accumulator, value) => accumulator.concat(value),
     []
   );
+  console.log(spans, output);
+  return output
 }
 
 function slpfLines(points: XYPoint[]): XYPoint[][] {
@@ -152,7 +157,7 @@ function slpfLines(points: XYPoint[]): XYPoint[][] {
       });
       // fill spans on scanline
       const spans = getSpans(yScan, activeEdges);
-      //   console.log(spans);
+        console.log(spans, gatherSpans(spans));
       horizontalLines.push(gatherSpans(spans));
       yScan += 1;
     } else {
