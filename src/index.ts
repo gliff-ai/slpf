@@ -66,7 +66,7 @@ function pointsToEdges(points: XYPoint[]) {
   for (let i = 0; i < points.length; i += 1) {
     const point2 = points[i];
     // ignore horizontal edges
-    if (point1.x !== point2.x) { // !!! surely this excludes vertical, not horizontal edges?
+    if (point1.y !== point2.y) {
       edges.push({ point1, point2 });
     }
     point1 = point2;
