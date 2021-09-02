@@ -89,7 +89,7 @@ function removeEdges(yScan: number, activeEdges: Edge[]) {
       // either one edge edge is on this scane line
       // or the entire edge is below yScan
       // remove offending edge and shrink array
-      
+
       if (i < activeEdges.length) {
         activeEdges.splice(i, 1);
         i -= 1;
