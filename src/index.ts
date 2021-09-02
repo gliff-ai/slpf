@@ -62,7 +62,7 @@ function getXofYMax(edge: Edge) {
 function pointsToEdges(points: XYPoint[]) {
   // converts list of points to list of non-horizontal edges
   const edges: Edge[] = [];
-  let point1 = points[points.length - 1]; // !!! why points.length - 1?
+  let point1 = points[points.length - 1]; // ensures that we get a closed loop of edges
   for (let i = 0; i < points.length; i += 1) {
     const point2 = points[i];
     // ignore horizontal edges
@@ -85,15 +85,13 @@ function moveEdges(yScan: number, edges: Edge[], activeEdges: Edge[]) {
 function removeEdges(yScan: number, activeEdges: Edge[]) {
   // remove inactive edges from activeEdges
   for (let i = 0; i < activeEdges.length; i += 1) {
-    if (yScan >= getYMax(activeEdges[i])) { // !!! by the earlier definition of an active edge, this should be yScan > getYMax
+    if (yScan > getYMax(activeEdges[i])) {
       // either one edge edge is on this scane line
       // or the entire edge is below yScan
       // remove offending edge and shrink array
-      // !!! this deletion mechanism is weird, normal way would be to use splice. I think this will fail if the final element is inactive
-      const last = activeEdges.pop();
-      if (i < activeEdges.length && last) {
-        // eslint-disable-next-line no-param-reassign
-        activeEdges[i] = last;
+      
+      if (i < activeEdges.length) {
+        activeEdges.splice(i, 1);
         i -= 1;
       }
     }
