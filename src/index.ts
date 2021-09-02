@@ -77,7 +77,7 @@ function pointsToEdges(points: XYPoint[]) {
 function moveEdges(yScan: number, edges: Edge[], activeEdges: Edge[]) {
   // move active edges from edges to activeEdges
   // an active edge is one where either point is at yScan>=y
-  while (edges.length > 0 && yScan >= getYMin(edges[edges.length - 1])) { // !!! this assumes all the "active" edges are at the end of edges, otherwise it will miss some
+  while (edges.length > 0 && yScan >= getYMin(edges[edges.length - 1])) {
     activeEdges.push(edges.pop());
   }
 }
@@ -102,7 +102,6 @@ function getSpans(yScan: number, activeEdges: Edge[]) {
   // find spans of 'inside polygon' along scanline
   const spans: XYPoint[] = [];
   for (const edge of activeEdges) {
-    // !!! this looks like it's meant to get all the edge intersections along the scanline, but "active" edges don't necessarily intersect the scanline according to the definition above
     spans.push({ x: lerp(yScan, edge), y: yScan });
   }
   return spans;
