@@ -76,7 +76,7 @@ function pointsToEdges(points: XYPoint[]) {
 
 function moveEdges(yScan: number, edges: Edge[], activeEdges: Edge[]) {
   // move active edges from edges to activeEdges
-  // an active edge is one where either point is at y>=yScan
+  // an active edge is one where either point is at yScan>=y
   while (edges.length > 0 && yScan >= getYMin(edges[edges.length - 1])) { // !!! this assumes all the "active" edges are at the end of edges, otherwise it will miss some
     activeEdges.push(edges.pop());
   }
