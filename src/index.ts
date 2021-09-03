@@ -62,11 +62,11 @@ function getXofYMax(edge: Edge) {
 function pointsToEdges(points: XYPoint[]) {
   // converts list of points to list of non-horizontal edges
   const edges: Edge[] = [];
-  let point1 = points[points.length - 1];
+  let point1 = points[points.length - 1]; // ensures that we get a closed loop of edges
   for (let i = 0; i < points.length; i += 1) {
     const point2 = points[i];
     // ignore horizontal edges
-    if (point1.x !== point2.x) {
+    if (point1.y !== point2.y) {
       edges.push({ point1, point2 });
     }
     point1 = point2;
@@ -76,7 +76,7 @@ function pointsToEdges(points: XYPoint[]) {
 
 function moveEdges(yScan: number, edges: Edge[], activeEdges: Edge[]) {
   // move active edges from edges to activeEdges
-  // an active edge is one where either point is at y>=yScan
+  // an active edge is one where either point is at yScan>=y
   while (edges.length > 0 && yScan >= getYMin(edges[edges.length - 1])) {
     activeEdges.push(edges.pop());
   }
@@ -85,14 +85,13 @@ function moveEdges(yScan: number, edges: Edge[], activeEdges: Edge[]) {
 function removeEdges(yScan: number, activeEdges: Edge[]) {
   // remove inactive edges from activeEdges
   for (let i = 0; i < activeEdges.length; i += 1) {
-    if (yScan >= getYMax(activeEdges[i])) {
+    if (yScan > getYMax(activeEdges[i])) {
       // either one edge edge is on this scane line
       // or the entire edge is below yScan
       // remove offending edge and shrink array
-      const last = activeEdges.pop();
-      if (i < activeEdges.length && last) {
-        // eslint-disable-next-line no-param-reassign
-        activeEdges[i] = last;
+
+      if (i < activeEdges.length) {
+        activeEdges.splice(i, 1);
         i -= 1;
       }
     }
@@ -106,20 +105,6 @@ function getSpans(yScan: number, activeEdges: Edge[]) {
     spans.push({ x: lerp(yScan, edge), y: yScan });
   }
   return spans;
-}
-
-function gatherSpans(spans: XYPoint[]): XYPoint[] {
-  // for a list of spans, gather all the pixels within those spans together
-  const gatheredSpans: XYPoint[][] = [];
-  for (let i = 0; i < spans.length; i += 2) {
-    const point1 = spans[i];
-    const point2 = spans[i + 1];
-    gatheredSpans.push([point1, point2]);
-  }
-  return gatheredSpans.reduce(
-    (accumulator, value) => accumulator.concat(value),
-    []
-  );
 }
 
 function slpfLines(points: XYPoint[]): XYPoint[][] {
@@ -152,8 +137,7 @@ function slpfLines(points: XYPoint[]): XYPoint[][] {
       });
       // fill spans on scanline
       const spans = getSpans(yScan, activeEdges);
-      //   console.log(spans);
-      horizontalLines.push(gatherSpans(spans));
+      horizontalLines.push(spans);
       yScan += 1;
     } else {
       yScan += 1;
