@@ -9,13 +9,13 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "webpack --progress --mode=development --config webpack.config.js",
-    "format": "npx --no-install prettier --write src/*.ts",
-    "prettier": "npx --no-install prettier -c src/*.ts",
+    "build": "npx vite build -c vite.config.lib.ts && tsc --emitDeclarationOnly --outDir dist",
+    "watch": "npx vite build -c vite.config.lib.ts --watch",
+    "format": "npx --no-install prettier --write src/*.ts*",
+    "prettier": "npx --no-install prettier -c src/*.ts*",
     "lint": "npm run lint:ts && npm run prettier",
-    "lint:ts": "npx eslint src/*.ts",
-    "test": "jest --coverage --passWithNoTests",
-    "prepublishOnly": "rm -r dist/; webpack --progress --mode=production --config webpack.config.js"
+    "lint:ts": "npx --no-install eslint src/*.ts*",
+    "test": "jest --coverage --passWithNoTests"
   },
   "repository": {
     "type": "git",
@@ -27,24 +27,23 @@
   },
   "homepage": "https://github.com/gliff-ai/slpf#readme",
   "devDependencies": {
-    "@babel/core": "^7.13.8",
-    "@babel/plugin-proposal-class-properties": "^7.13.0",
-    "@babel/preset-env": "^7.12.17",
-    "@babel/preset-typescript": "^7.12.17",
     "@typescript-eslint/eslint-plugin": "^4.19.0",
     "@typescript-eslint/parser": "^4.18.0",
-    "eslint": "^7.22.0",
-    "eslint-config-airbnb-typescript": "^12.3.1",
+    "eslint": "^7.25.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-airbnb-typescript": "^14.0.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-prettier": "^3.3.0",
-    "eslint-webpack-plugin": "^2.5.2",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-mui-unused-classes": "^1.0.3",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.23.1",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "jest": "^27.0.3",
     "prettier": "=2.3.0",
-    "ts-loader": "^9.1.1",
-    "typescript": "^4.2.3",
-    "webpack": "^5.27.2",
-    "webpack-cli": "^4.5.0"
+    "typescript": "^4.2.5",
+    "vite": "^2.5.1",
+    "vite-aliases": "^0.8.6"
   },
   "peerDependencies": {},
   "dependencies": {}
