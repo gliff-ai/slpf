@@ -8,6 +8,7 @@ module.exports = {
   plugins: ["@typescript-eslint"],
   extends: [
     "eslint:recommended",
+    "airbnb",
     "airbnb-typescript",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
@@ -18,7 +19,9 @@ module.exports = {
       files: ["*.ts"],
       rules: {
         "global-require": 0,
+        "import/extensions": 0,
         "@typescript-eslint/no-var-requires": 0,
+        "react/react-in-jsx-scope": 0,
         "no-void": ["error", { allowAsStatement: true }],
         "import/prefer-default-export": "off", // Most of the internet agrees this should be off
         "no-restricted-syntax": [
