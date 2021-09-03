@@ -1,12 +1,12 @@
 {
   "name": "@gliff-ai/slpf",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "description": "Scan Line Polygon Filling for gliff.ai apps",
-  "main": "dist/main.js",
-  "module": "dist/src/index.ts",
+  "module": "dist/index.es.js",
+  "main": "dist/index.es.js",
   "typings": "dist/index.d.ts",
   "files": [
-    "dist/*"
+    "dist"
   ],
   "scripts": {
     "build": "npx vite build -c vite.config.lib.ts && tsc --emitDeclarationOnly --outDir dist",
