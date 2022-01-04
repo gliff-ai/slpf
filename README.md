@@ -4,9 +4,9 @@
 
 👋 **Welcome in!** 👋
 
-This repository contains the Open Source code for a Scanline Polygon Fill (SLPF) algorithm (based on: [Kyle Amoroso’s Polygon Fill Algorithms Benchmark](https://github.com/kamoroso94/polygon-fill-benchmark)) for use on the gliff.ai platform.
+This repository contains the Open Source code for [gliff.ai](https://gliff.ai/)'s Scanline Polygon Fill (SLPF) algorithm (based on: [Kyle Amoroso’s Polygon Fill Algorithms Benchmark](https://github.com/kamoroso94/polygon-fill-benchmark)) for use on [ANNOTATE](https://github.com/gliff-ai/annotate/blob/main/README.md).
 
-This repository aims to allow users to fill the area of an annotation object within the ANNOTATE product for the purposes of enhancing their development of imaging AI products. gliff.ai’s SLPF is just one supporting aspect of gliff.ai’s growing privacy-preserving MLOps (Machine Learning Operations) platform. When the full gliff.ai platform is used, gliff.ai’s SLPF provides just one step in developing high-quality and auditable datasets that satisfy any relevant regulatory frameworks which enables our users to build world-changing and trustworthy AI models and products.
+This repository aims to allow users to fill the area of an annotation object within the ANNOTATE product for the purposes of enhancing their development of imaging AI products. gliff.ai’s SLPF is just one supporting aspect of [gliff.ai](https://gliff.ai/)’s growing privacy-preserving MLOps (Machine Learning Operations) platform. When the full [gliff.ai platform](https://gliff.ai/software/) is used, gliff.ai’s SLPF provides just one step in developing high-quality and auditable datasets that satisfy any relevant regulatory frameworks which enables our users to build world-changing and trustworthy AI models and products.
 
 ✅ **We welcome contributions on this repository!** ✅
 
