@@ -100,9 +100,16 @@ function removeEdges(yScan: number, activeEdges: Edge[]) {
 
 function getSpans(yScan: number, activeEdges: Edge[]) {
   // find spans of 'inside polygon' along scanline
-  const spans: XYPoint[] = [];
+  const spans: XYPoint[][] = [];
   for (const edge of activeEdges) {
-    spans.push({ x: lerp(yScan, edge), y: yScan });
+    const intersection: XYPoint = { x: lerp(yScan, edge), y: yScan };
+    if (spans.length === 0 || spans[spans.length - 1].length === 2) {
+      // if spans is empty or the last span is complete, begin a new span
+      spans.push([intersection]);
+    } else {
+      // otherwise, complete the last span
+      spans[spans.length - 1].push(intersection);
+    }
   }
   return spans;
 }
@@ -137,7 +144,7 @@ function slpfLines(points: XYPoint[]): XYPoint[][] {
       });
       // fill spans on scanline
       const spans = getSpans(yScan, activeEdges);
-      horizontalLines.push(spans);
+      horizontalLines.push(...spans);
       yScan += 1;
     } else {
       yScan += 1;
