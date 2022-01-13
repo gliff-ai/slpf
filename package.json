@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/gliff-ai/slpf#readme",
   "devDependencies": {
+    "@gliff-ai/eslint-config": "^0.2.1",
     "@typescript-eslint/eslint-plugin": "^4.19.0",
     "@typescript-eslint/parser": "^4.18.0",
     "eslint": "^7.25.0",
